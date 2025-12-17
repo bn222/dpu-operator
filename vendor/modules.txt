@@ -899,8 +899,9 @@ github.com/openshift/machine-config-operator/pkg/generated/informers/externalver
 github.com/openshift/machine-config-operator/pkg/generated/informers/externalversions/machineconfiguration.openshift.io/v1
 github.com/openshift/machine-config-operator/pkg/generated/listers/machineconfiguration.openshift.io/v1
 github.com/openshift/machine-config-operator/pkg/version
-# github.com/opiproject/opi-api v0.0.0-20240808163627-6cd218088dda
-## explicit
+# github.com/opiproject/opi-api v0.0.0-20240808163627-6cd218088dda => /home/bnemeth/repos/opi-api
+## explicit; go 1.24.3
+github.com/opiproject/opi-api/gen/go/lifecycle/v1alpha1
 github.com/opiproject/opi-api/network/evpn-gw/v1alpha1/gen/go
 github.com/opiproject/opi-api/network/opinetcommon/v1alpha1/gen/go
 # github.com/ovn-org/libovsdb v0.6.1-0.20240125124854-03f787b1a892
@@ -2183,3 +2184,4 @@ sigs.k8s.io/yaml/goyaml.v2
 sigs.k8s.io/yaml/goyaml.v3
 # github.com/openshift/dpu-operator/api => ./api
 # github.com/openshift/dpu-operator/dpu-api => ./dpu-api
+# github.com/opiproject/opi-api => /home/bnemeth/repos/opi-api

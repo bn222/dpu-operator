@@ -253,4 +253,5 @@ require (
 replace (
 	github.com/openshift/dpu-operator/api => ./api
 	github.com/openshift/dpu-operator/dpu-api => ./dpu-api
+	github.com/opiproject/opi-api => /home/bnemeth/repos/opi-api
 )

@@ -4,23 +4,9 @@ option go_package = "github.com/openshift/dpu-operator/api/dpu-api";
 
 package Vendor;
 
-service LifeCycleService {
-  rpc Init(InitRequest) returns (IpPort);
-}
-
 service NetworkFunctionService {
   rpc CreateNetworkFunction(NFRequest) returns (Empty);
   rpc DeleteNetworkFunction(NFRequest) returns (Empty);
-}
-
-message InitRequest {
-  bool dpu_mode = 1;
-  string dpu_identifier = 2;
-}
-
-message IpPort {
-  string ip = 1;
-  int32 port = 2;
 }
 
 message NFRequest {
@@ -29,41 +15,3 @@ message NFRequest {
 }
 
 message Empty {}
-
-service DeviceService {
-  rpc GetDevices(Empty) returns (DeviceListResponse);
-  rpc SetNumVfs(VfCount) returns (VfCount);
-}
-
-message VfCount {
-  int32 vf_cnt = 1;
-}
-
-message TopologyInfo {
-  string node = 1;
-}
-
-message Device {
-  string ID = 1;
-  string health = 2;
-  TopologyInfo topology = 3;
-}
-
-message DeviceListResponse {
-  map<string, Device> devices = 1;
-}
-
-service HeartbeatService {
-  rpc Ping(PingRequest) returns (PingResponse);
-}
-
-message PingRequest {
-  int64 timestamp = 1;
-  string sender_id = 2;
-}
-
-message PingResponse {
-  int64 timestamp = 1;
-  string responder_id = 2;
-  bool healthy = 3;
-}

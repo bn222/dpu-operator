@@ -356,8 +356,6 @@ github.com/openshift/library-go v0.0.0-20231020125025-211b32f1a1f2 h1:TWG/YVRhSv
 github.com/openshift/library-go v0.0.0-20231020125025-211b32f1a1f2/go.mod h1:ZFwNwC3opc/7aOvzUbU95zp33Lbxet48h80ryH3p6DY=
 github.com/openshift/machine-config-operator v0.0.1-0.20231024085435-7e1fb719c1ba h1:WM6K+m2xMAwbQDetKGhV/Rd8yukF3AsU1z74cqoWrz0=
 github.com/openshift/machine-config-operator v0.0.1-0.20231024085435-7e1fb719c1ba/go.mod h1:mSt3ACow31pa1hTRONn+yT5e+KFkgi7G2bFEx5Nj+n0=
-github.com/opiproject/opi-api v0.0.0-20240808163627-6cd218088dda h1:yNZlmm+QZ8HjQfZEA1iTaB/br8jYDlf+6YD9DCLGuYE=
-github.com/opiproject/opi-api v0.0.0-20240808163627-6cd218088dda/go.mod h1:92pv4ulvvPMuxCJ9ND3aYbmBfEMLx0VCjpkiR7ZTqPY=
 github.com/ovn-org/libovsdb v0.6.1-0.20240125124854-03f787b1a892 h1:/yg3/z+RH+iDLMxp6FTnmlk5bStK542/Rge5EBjnA9A=
 github.com/ovn-org/libovsdb v0.6.1-0.20240125124854-03f787b1a892/go.mod h1:LC5DOvcY58jOG3HTvDyCVidoMJDurPeu+xlxv5Krd9Q=
 github.com/p4lang/p4runtime v1.4.1 h1:YdtDyDReeGEmSvuxqR8iefSTnttRSW5jWJWtpgCSFv4=

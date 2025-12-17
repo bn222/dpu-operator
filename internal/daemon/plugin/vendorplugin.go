@@ -9,11 +9,13 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	pb "github.com/openshift/dpu-operator/dpu-api/gen"
+	nfpb "github.com/openshift/dpu-operator/dpu-api/gen"
 	"github.com/openshift/dpu-operator/internal/utils"
 	opi "github.com/opiproject/opi-api/network/evpn-gw/v1alpha1/gen/go"
+	lifecyclepb "github.com/opiproject/opi-api/gen/go/lifecycle/v1alpha1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/types/known/emptypb"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -29,17 +31,17 @@ type VendorPlugin interface {
 	DeleteBridgePort(bpr *opi.DeleteBridgePortRequest) error
 	CreateNetworkFunction(input string, output string) error
 	DeleteNetworkFunction(input string, output string) error
-	GetDevices() (*pb.DeviceListResponse, error)
-	SetNumVfs(vfCount int32) (*pb.VfCount, error)
+	GetDevices() (*lifecyclepb.DeviceListResponse, error)
+	SetNumVfs(vfCount int32) (*lifecyclepb.VfCount, error)
 }
 
 type GrpcPlugin struct {
 	log           logr.Logger
-	client        pb.LifeCycleServiceClient
+	client        lifecyclepb.LifeCycleServiceClient
 	k8sClient     client.Client
 	opiClient     opi.BridgePortServiceClient
-	nfclient      pb.NetworkFunctionServiceClient
-	dsClient      pb.DeviceServiceClient
+	nfclient      nfpb.NetworkFunctionServiceClient
+	dsClient      lifecyclepb.DeviceServiceClient
 	dpuMode       bool
 	dpuIdentifier DpuIdentifier
 	conn          *grpc.ClientConn
@@ -69,7 +71,7 @@ func (g *GrpcPlugin) Start(ctx context.Context) (string, int32, error) {
 			continue
 		}
 
-		ipPort, err := g.client.Init(ctx, &pb.InitRequest{DpuMode: g.dpuMode, DpuIdentifier: string(g.dpuIdentifier)})
+		ipPort, err := g.client.Init(ctx, &lifecyclepb.InitRequest{DpuMode: g.dpuMode, DpuIdentifier: string(g.dpuIdentifier)})
 		if err != nil {
 			if strings.Contains(err.Error(), "already initialized") {
 				// VSP was already initialized, mark as initialized and return the error
@@ -145,10 +147,10 @@ func (g *GrpcPlugin) ensureConnected() error {
 	}
 	g.conn = conn
 
-	g.client = pb.NewLifeCycleServiceClient(conn)
-	g.nfclient = pb.NewNetworkFunctionServiceClient(conn)
+	g.client = lifecyclepb.NewLifeCycleServiceClient(conn)
+	g.nfclient = nfpb.NewNetworkFunctionServiceClient(conn)
 	g.opiClient = opi.NewBridgePortServiceClient(conn)
-	g.dsClient = pb.NewDeviceServiceClient(conn)
+	g.dsClient = lifecyclepb.NewDeviceServiceClient(conn)
 	return nil
 }
 
@@ -175,7 +177,7 @@ func (g *GrpcPlugin) CreateNetworkFunction(input string, output string) error {
 	if err != nil {
 		return fmt.Errorf("CreateNetworkFunction failed to ensure GRPC connection: %v", err)
 	}
-	req := pb.NFRequest{Input: input, Output: output}
+	req := nfpb.NFRequest{Input: input, Output: output}
 	_, err = g.nfclient.CreateNetworkFunction(context.TODO(), &req)
 	return err
 }
@@ -186,25 +188,25 @@ func (g *GrpcPlugin) DeleteNetworkFunction(input string, output string) error {
 	if err != nil {
 		return fmt.Errorf("DeleteNetworkFunction failed to ensure GRPC connection: %v", err)
 	}
-	req := pb.NFRequest{Input: input, Output: output}
+	req := nfpb.NFRequest{Input: input, Output: output}
 	_, err = g.nfclient.DeleteNetworkFunction(context.TODO(), &req)
 	return err
 }
 
-func (g *GrpcPlugin) GetDevices() (*pb.DeviceListResponse, error) {
+func (g *GrpcPlugin) GetDevices() (*lifecyclepb.DeviceListResponse, error) {
 	err := g.ensureConnected()
 	if err != nil {
 		return nil, fmt.Errorf("GetDevices failed to ensure GRPC connection: %v", err)
 	}
-	return g.dsClient.GetDevices(context.Background(), &pb.Empty{})
+	return g.dsClient.GetDevices(context.Background(), &emptypb.Empty{})
 }
 
-func (g *GrpcPlugin) SetNumVfs(count int32) (*pb.VfCount, error) {
+func (g *GrpcPlugin) SetNumVfs(count int32) (*lifecyclepb.VfCount, error) {
 	err := g.ensureConnected()
 	if err != nil {
 		return nil, fmt.Errorf("SetNumvfs failed to ensure GRPC connection: %v", err)
 	}
-	c := &pb.VfCount{
+	c := &lifecyclepb.VfCount{
 		VfCnt: count,
 	}
 	return g.dsClient.SetNumVfs(context.Background(), c)
